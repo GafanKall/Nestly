@@ -18,18 +18,41 @@ export const PRIORITY_OPTIONS = [
 
 export type PriorityValue = (typeof PRIORITY_OPTIONS)[number]["value"];
 
-export const FINANCE_CATEGORIES = [
-  { value: "food", label: "Food" },
-  { value: "transport", label: "Transport" },
+export const EXPENSE_CATEGORIES = [
+  { value: "food", label: "Food & Dining" },
+  { value: "transport", label: "Transportation" },
   { value: "shopping", label: "Shopping" },
-  { value: "bills", label: "Bills" },
+  { value: "bills", label: "Bills & Utilities" },
   { value: "entertainment", label: "Entertainment" },
   { value: "education", label: "Education" },
-  { value: "health", label: "Health" },
+  { value: "health", label: "Health & Fitness" },
+  { value: "housing", label: "Housing & Rent" },
+  { value: "other_expense", label: "Other Expense" },
+] as const;
+
+export const INCOME_CATEGORIES = [
+  { value: "salary", label: "Salary & Wages" },
+  { value: "freelance", label: "Freelance & Projects" },
+  { value: "investment", label: "Investment & Dividends" },
+  { value: "business", label: "Business" },
+  { value: "gift", label: "Gift & Allowance" },
+  { value: "bonus", label: "Bonus & Rewards" },
+  { value: "other_income", label: "Other Income" },
+] as const;
+
+export const FINANCE_CATEGORIES = [
+  ...EXPENSE_CATEGORIES,
+  ...INCOME_CATEGORIES,
   { value: "other", label: "Other" },
 ] as const;
 
 export type FinanceCategoryValue = (typeof FINANCE_CATEGORIES)[number]["value"];
+
+export const getCategoryLabel = (categoryValue: string): string => {
+  const found = FINANCE_CATEGORIES.find((c) => c.value === categoryValue);
+  if (found) return found.label;
+  return categoryValue.charAt(0).toUpperCase() + categoryValue.slice(1);
+};
 
 export const TRANSACTION_TYPES = [
   { value: "income", label: "Income" },

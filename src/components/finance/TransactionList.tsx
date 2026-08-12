@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp, MoreVertical, Edit2, Trash2 } from "lucide-react";
+import { getCategoryLabel } from "@/lib/constants";
 import { formatCurrency, formatDate } from "@/lib/utils/format";
 import { deleteTransaction } from "@/lib/actions/finance";
 import type { Transaction } from "@/types/database";
@@ -46,8 +47,9 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
                 </div>
                 <div>
                   <p className="font-medium text-sm" style={{ color: "var(--color-text-primary)" }}>
-                    {tx.category}
+                    {getCategoryLabel(tx.category)}
                   </p>
+
                   <div className="flex items-center gap-2 text-xs" style={{ color: "var(--color-text-secondary)" }}>
                     <span>{formatDate(tx.transaction_date)}</span>
                     {tx.description && (

@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { transactionSchema, type TransactionInput } from "@/lib/validations/finance";
 import { createTransaction, updateTransaction } from "@/lib/actions/finance";
 import { getTodayDateString } from "@/lib/utils/format";
-import { FINANCE_CATEGORIES } from "@/lib/constants";
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/constants";
 import type { Transaction } from "@/types/database";
 import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
@@ -50,7 +50,8 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
 
   const selectedType = watch("type");
   const currentAmount = watch("amount");
-  const categories = FINANCE_CATEGORIES;
+  const categories = selectedType === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
