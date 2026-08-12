@@ -41,6 +41,12 @@ export async function updateTransaction(id: string, data: TransactionInput) {
   }
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
   const { error } = await supabase
     .from("transactions")
     .update({
@@ -50,7 +56,8 @@ export async function updateTransaction(id: string, data: TransactionInput) {
       description: parsed.data.description || null,
       transaction_date: parsed.data.transaction_date,
     })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 
@@ -61,7 +68,17 @@ export async function updateTransaction(id: string, data: TransactionInput) {
 
 export async function deleteTransaction(id: string) {
   const supabase = await createClient();
-  const { error } = await supabase.from("transactions").delete().eq("id", id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
+  const { error } = await supabase
+    .from("transactions")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 

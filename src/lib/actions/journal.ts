@@ -41,6 +41,12 @@ export async function updateJournal(id: string, data: JournalInput) {
   }
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
   const { error } = await supabase
     .from("journals")
     .update({
@@ -51,7 +57,8 @@ export async function updateJournal(id: string, data: JournalInput) {
       entry_date: parsed.data.entry_date,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 
@@ -63,7 +70,17 @@ export async function updateJournal(id: string, data: JournalInput) {
 
 export async function deleteJournal(id: string) {
   const supabase = await createClient();
-  const { error } = await supabase.from("journals").delete().eq("id", id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
+  const { error } = await supabase
+    .from("journals")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 

@@ -17,10 +17,19 @@ interface TransactionFormProps {
   initialData?: Transaction;
 }
 
+const formatDisplayAmount = (val: string | number | undefined): string => {
+  if (val === undefined || val === null || val === "") return "";
+  const numStr = String(val).replace(/\D/g, "");
+  if (!numStr) return "";
+  return new Intl.NumberFormat("id-ID").format(parseInt(numStr, 10));
+};
+
 export function TransactionForm({ initialData }: TransactionFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isEditing = !!initialData;
+
+  const initialAmount = initialData?.amount ? formatDisplayAmount(initialData.amount) : "";
 
   const {
     register,
@@ -32,7 +41,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       type: initialData?.type || "expense",
-      amount: initialData?.amount ? String(initialData.amount) : undefined,
+      amount: initialAmount,
       category: initialData?.category || "",
       description: initialData?.description || "",
       transaction_date: initialData?.transaction_date || getTodayDateString(),
@@ -40,7 +49,19 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
   });
 
   const selectedType = watch("type");
+  const currentAmount = watch("amount");
   const categories = FINANCE_CATEGORIES;
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    const digits = raw.replace(/\D/g, "");
+    if (!digits) {
+      setValue("amount", "", { shouldValidate: true });
+      return;
+    }
+    const formatted = new Intl.NumberFormat("id-ID").format(parseInt(digits, 10));
+    setValue("amount", formatted, { shouldValidate: true });
+  };
 
   const onSubmit = (data: TransactionInput) => {
     startTransition(async () => {
@@ -108,16 +129,20 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
             Amount
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: "var(--color-text-muted)" }}>
-              $
+            <span
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold select-none"
+              style={{ color: "var(--color-text-muted)" }}
+            >
+              Rp
             </span>
             <input
               id="amount"
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              {...register("amount", { valueAsNumber: true })}
-              className="w-full pl-8 pr-4 py-3 rounded-xl border text-base outline-none transition-colors"
+              type="text"
+              inputMode="numeric"
+              placeholder="0"
+              value={currentAmount || ""}
+              onChange={handleAmountChange}
+              className="w-full pl-11 pr-4 py-3 rounded-xl border text-base outline-none transition-colors"
               style={{
                 borderColor: errors.amount ? "var(--color-expense)" : "var(--color-border)",
                 backgroundColor: "var(--color-surface)",
@@ -125,7 +150,11 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
               }}
             />
           </div>
-          {errors.amount && <p className="text-xs" style={{ color: "var(--color-expense)" }}>{errors.amount.message}</p>}
+          {errors.amount && (
+            <p className="text-xs" style={{ color: "var(--color-expense)" }}>
+              {errors.amount.message as string}
+            </p>
+          )}
         </div>
 
         {/* Date */}

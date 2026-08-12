@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Feather } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
@@ -46,10 +46,10 @@ export default function LoginPage() {
       {/* Avatar placeholder */}
       <div className="flex justify-center mb-5">
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold"
+          className="w-12 h-12 rounded-full flex items-center justify-center"
           style={{ backgroundColor: "var(--color-accent-light)", color: "var(--color-accent)" }}
         >
-          spa
+          <Feather size={20} />
         </div>
       </div>
 

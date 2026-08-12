@@ -39,6 +39,12 @@ export async function updateNote(id: string, data: NoteInput) {
   }
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
   const { error } = await supabase
     .from("notes")
     .update({
@@ -47,7 +53,8 @@ export async function updateNote(id: string, data: NoteInput) {
       tags: parsed.data.tags,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 
@@ -59,7 +66,17 @@ export async function updateNote(id: string, data: NoteInput) {
 
 export async function deleteNote(id: string) {
   const supabase = await createClient();
-  const { error } = await supabase.from("notes").delete().eq("id", id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
+  const { error } = await supabase
+    .from("notes")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 

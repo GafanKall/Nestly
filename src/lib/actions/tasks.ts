@@ -7,10 +7,17 @@ import { taskSchema, type TaskInput } from "@/lib/validations/tasks";
 
 export async function completeTask(taskId: string, isCompleted: boolean) {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
   const { error } = await supabase
     .from("tasks")
     .update({ status: isCompleted ? "completed" : "pending" })
-    .eq("id", taskId);
+    .eq("id", taskId)
+    .eq("user_id", user.id);
 
   if (error) {
     return { error: error.message };
@@ -57,6 +64,12 @@ export async function updateTask(id: string, data: TaskInput) {
   }
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
   const { error } = await supabase
     .from("tasks")
     .update({
@@ -65,7 +78,8 @@ export async function updateTask(id: string, data: TaskInput) {
       due_date: parsed.data.due_date || null,
       priority: parsed.data.priority as any,
     })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 
@@ -76,7 +90,17 @@ export async function updateTask(id: string, data: TaskInput) {
 
 export async function deleteTask(id: string) {
   const supabase = await createClient();
-  const { error } = await supabase.from("tasks").delete().eq("id", id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated." };
+
+  const { error } = await supabase
+    .from("tasks")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 
@@ -84,4 +108,3 @@ export async function deleteTask(id: string) {
   revalidatePath("/dashboard");
   return { success: true };
 }
-

@@ -7,10 +7,16 @@ const typeValues = TRANSACTION_TYPES.map((t) => t.value) as [string, ...string[]
 export const transactionSchema = z.object({
   type: z.enum(typeValues as [string, ...string[]]),
   amount: z
-    .string()
-    .min(1, "Amount is required.")
-    .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-      message: "Amount must be greater than zero.",
+    .union([z.string(), z.number()])
+    .transform((val) => {
+      if (typeof val === "number") return val;
+      if (!val || val.trim() === "") return NaN;
+      // Strip dots (thousands separator in IDR) and replace comma with dot for decimals
+      const clean = val.replace(/\./g, "").replace(",", ".");
+      return parseFloat(clean);
+    })
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Amount must be a valid number greater than zero.",
     }),
   category: z.enum(categoryValues as [string, ...string[]]),
   description: z.string().max(500, "Description too long.").optional().nullable(),
