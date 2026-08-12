@@ -1,17 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { MOOD_OPTIONS } from "@/lib/constants";
 
 export function MoodPicker() {
   const router = useRouter();
 
   const handleMoodSelect = (moodValue: string) => {
-    // Navigate to new journal entry with mood pre-filled in query params
     router.push(`/journal/new?mood=${moodValue}`);
   };
 
-  // Only show the first 5 for the dashboard quick picker
   const dashboardMoods = MOOD_OPTIONS.slice(0, 5);
 
   return (
@@ -27,13 +26,19 @@ export function MoodPicker() {
           <button
             key={mood.value}
             onClick={() => handleMoodSelect(mood.value)}
-            className="flex flex-col items-center justify-center w-16 h-20 rounded-xl border transition-all hover:scale-105"
+            className="flex flex-col items-center justify-center w-16 h-20 rounded-xl border transition-all hover:scale-105 p-2"
             style={{
               backgroundColor: "var(--color-surface)",
               borderColor: "var(--color-border)",
             }}
           >
-            <span className="text-2xl mb-1">{mood.emoji}</span>
+            <Image
+              src={mood.iconUrl}
+              alt={mood.label}
+              width={36}
+              height={36}
+              className="object-contain mb-1"
+            />
             <span
               className="text-[10px] font-medium"
               style={{ color: "var(--color-text-secondary)" }}

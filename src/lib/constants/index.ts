@@ -1,11 +1,9 @@
 export const MOOD_OPTIONS = [
-  { value: "happy", label: "Happy", emoji: "😊" },
-  { value: "excited", label: "Excited", emoji: "🤩" },
-  { value: "neutral", label: "Neutral", emoji: "😐" },
-  { value: "tired", label: "Tired", emoji: "😴" },
-  { value: "anxious", label: "Anxious", emoji: "😰" },
-  { value: "sad", label: "Sad", emoji: "😢" },
-  { value: "angry", label: "Angry", emoji: "😠" },
+  { value: "happy", label: "Happy", emoji: "😊", iconUrl: "/assets/emoticon/nestly_happy.png" },
+  { value: "excited", label: "Excited", emoji: "🤩", iconUrl: "/assets/emoticon/nestly_excited.png" },
+  { value: "neutral", label: "Neutral", emoji: "😐", iconUrl: "/assets/emoticon/nestly_neutral.png" },
+  { value: "tired", label: "Tired", emoji: "😴", iconUrl: "/assets/emoticon/nestly_tired.png" },
+  { value: "anxious", label: "Anxious", emoji: "😰", iconUrl: "/assets/emoticon/nestly_anxious.png" },
 ] as const;
 
 export type MoodValue = (typeof MOOD_OPTIONS)[number]["value"];

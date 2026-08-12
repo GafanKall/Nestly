@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { formatDate, truncate } from "@/lib/utils/format";
 import { MOOD_OPTIONS } from "@/lib/constants";
 import type { JournalEntry } from "@/types/database";
@@ -27,8 +28,14 @@ export function JournalCard({ journal }: { journal: JournalEntry }) {
           </p>
         </div>
         {mood && (
-          <div className="text-2xl leading-none" title={mood.label}>
-            {mood.emoji}
+          <div className="flex-shrink-0" title={mood.label}>
+            <Image
+              src={mood.iconUrl}
+              alt={mood.label}
+              width={32}
+              height={32}
+              className="object-contain"
+            />
           </div>
         )}
       </div>

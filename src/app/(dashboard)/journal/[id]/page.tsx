@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Edit2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatDateFull } from "@/lib/utils/format";
@@ -90,15 +91,22 @@ export default async function ViewJournalPage(props: {
               {formatDateFull(journal.entry_date)}
             </p>
           </div>
+
           {mood && (
             <div
-              className="flex flex-col items-center justify-center w-14 h-16 rounded-xl border"
+              className="flex flex-col items-center justify-center w-16 h-20 rounded-xl border p-2"
               style={{
                 backgroundColor: "var(--color-surface)",
                 borderColor: "var(--color-border)",
               }}
             >
-              <span className="text-xl mb-1">{mood.emoji}</span>
+              <Image
+                src={mood.iconUrl}
+                alt={mood.label}
+                width={36}
+                height={36}
+                className="object-contain mb-1"
+              />
               <span
                 className="text-[10px] font-medium"
                 style={{ color: "var(--color-text-secondary)" }}
@@ -109,7 +117,9 @@ export default async function ViewJournalPage(props: {
           )}
         </div>
 
+
         <div
+
           className="prose prose-sm sm:prose-base whitespace-pre-wrap max-w-none mb-8"
           style={{ color: "var(--color-text-primary)" }}
         >

@@ -1,10 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Book } from "lucide-react";
 import type { JournalEntry } from "@/types/database";
 import { formatDate, truncate } from "@/lib/utils/format";
 import { MOOD_OPTIONS } from "@/lib/constants";
 
 export function RecentJournalCard({ journal }: { journal: JournalEntry | null }) {
+  const mood = journal?.mood ? MOOD_OPTIONS.find((m) => m.value === journal.mood) : null;
+
   return (
     <div className="card flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
@@ -39,9 +42,15 @@ export function RecentJournalCard({ journal }: { journal: JournalEntry | null })
             >
               {formatDate(journal.entry_date)}
             </span>
-            {journal.mood && (
-              <span className="text-lg leading-none" title={journal.mood}>
-                {MOOD_OPTIONS.find((m) => m.value === journal.mood)?.emoji}
+            {mood && (
+              <span className="flex-shrink-0" title={mood.label}>
+                <Image
+                  src={mood.iconUrl}
+                  alt={mood.label}
+                  width={24}
+                  height={24}
+                  className="object-contain"
+                />
               </span>
             )}
           </div>
