@@ -39,12 +39,12 @@ export default async function FinancePage() {
         action={{ label: "Add Transaction", href: "/finance/new" }}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <div className="lg:col-span-1">
-          <FinanceSummaryCard income={totalIncome} expense={totalExpense} />
+      <div className="space-y-6">
+        <div>
+          <FinanceSummaryCard income={totalIncome} expense={totalExpense} showDetailsLink={false} variant="wide" />
         </div>
 
-        <div className="lg:col-span-2">
+        <div>
           {error ? (
             <p className="text-sm text-expense">Failed to load transactions.</p>
           ) : txs.length > 0 ? (
