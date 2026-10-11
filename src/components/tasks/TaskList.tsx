@@ -92,13 +92,14 @@ export function TaskList({ tasks, title }: { tasks: Task[]; title?: string }) {
                 </div>
               </div>
 
-              <div className="hidden sm:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-4">
+              <div className="flex items-center gap-1 sm:gap-2 sm:opacity-0 group-hover:opacity-100 transition-opacity ml-3 shrink-0">
                 <Link
                   href={`/tasks/${task.id}/edit`}
-                  className="p-1.5 rounded-md hover:bg-accent/10 transition-colors"
+                  title="Edit Task"
+                  className="p-1.5 sm:p-1 rounded-md hover:bg-accent/10 transition-colors"
                   style={{ color: "var(--color-text-muted)" }}
                 >
-                  <Edit2 size={14} />
+                  <Edit2 size={15} />
                 </Link>
                 <ConfirmDialog
                   title="Delete Task"
@@ -106,10 +107,11 @@ export function TaskList({ tasks, title }: { tasks: Task[]; title?: string }) {
                   onConfirm={async () => handleDelete(task.id)}
                 >
                   <button
-                    className="p-1.5 rounded-md hover:bg-expense/10 transition-colors"
+                    title="Delete Task"
+                    className="p-1.5 sm:p-1 rounded-md hover:bg-expense/10 transition-colors"
                     style={{ color: "var(--color-text-muted)" }}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={15} />
                   </button>
                 </ConfirmDialog>
               </div>

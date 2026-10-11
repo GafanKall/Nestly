@@ -24,6 +24,7 @@ export default async function ViewJournalPage(props: {
     .from("journals")
     .select("*")
     .eq("id", params.id)
+    .eq("user_id", user.id)
     .single();
 
   if (error || !data) notFound();
@@ -39,26 +40,26 @@ export default async function ViewJournalPage(props: {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8">
         <Link
           href="/journal"
-          className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-accent"
+          className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium transition-colors hover:text-accent truncate"
           style={{ color: "var(--color-text-secondary)" }}
         >
-          <ArrowLeft size={16} />
-          Back to Journal
+          <ArrowLeft size={16} className="shrink-0" />
+          <span className="truncate">Back to Journal</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Link
             href={`/journal/${journal.id}/edit`}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-medium transition-colors hover:bg-accent/5"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-medium transition-colors hover:bg-accent/5"
             style={{
               backgroundColor: "var(--color-surface)",
               borderColor: "var(--color-border)",
               color: "var(--color-text-primary)",
             }}
           >
-            <Edit2 size={14} />
+            <Edit2 size={13} />
             Edit
           </Link>
 

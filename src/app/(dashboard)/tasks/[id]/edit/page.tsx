@@ -19,6 +19,7 @@ export default async function EditTaskPage(props: {
     .from("tasks")
     .select("*")
     .eq("id", params.id)
+    .eq("user_id", user.id)
     .single();
 
   if (error || !data) notFound();

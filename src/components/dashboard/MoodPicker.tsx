@@ -21,12 +21,12 @@ export function MoodPicker() {
       >
         How are you feeling today?
       </p>
-      <div className="flex flex-wrap gap-3">
+      <div className="grid grid-cols-5 gap-2 sm:gap-3">
         {dashboardMoods.map((mood) => (
           <button
             key={mood.value}
             onClick={() => handleMoodSelect(mood.value)}
-            className="flex flex-col items-center justify-center w-16 h-20 rounded-xl border transition-all hover:scale-105 p-2"
+            className="flex flex-col items-center justify-center w-full aspect-4/5 sm:w-16 sm:h-20 rounded-xl border transition-all hover:scale-105 p-1.5 sm:p-2 cursor-pointer"
             style={{
               backgroundColor: "var(--color-surface)",
               borderColor: "var(--color-border)",
@@ -35,12 +35,12 @@ export function MoodPicker() {
             <Image
               src={mood.iconUrl}
               alt={mood.label}
-              width={36}
-              height={36}
-              className="object-contain mb-1"
+              width={32}
+              height={32}
+              className="object-contain mb-1 w-6 h-6 sm:w-8 sm:h-8"
             />
             <span
-              className="text-[10px] font-medium"
+              className="text-[9px] sm:text-[10px] font-medium truncate max-w-full"
               style={{ color: "var(--color-text-secondary)" }}
             >
               {mood.label}

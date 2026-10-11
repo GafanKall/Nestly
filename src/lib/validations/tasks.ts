@@ -9,7 +9,12 @@ export const taskSchema = z.object({
     .min(1, "Title is required.")
     .max(200, "Title must be at most 200 characters."),
   description: z.string().max(1000, "Description too long.").optional().nullable(),
-  due_date: z.string().optional().nullable(),
+  due_date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Due date must follow YYYY-MM-DD format.")
+    .optional()
+    .nullable()
+    .or(z.literal("")),
   priority: z.enum(priorityValues as [string, ...string[]]).default("medium"),
 });
 

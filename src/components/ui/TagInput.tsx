@@ -58,7 +58,7 @@ export function TagInput({ value = [], onChange, placeholder = "Add tags..." }: 
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={value.length === 0 ? placeholder : ""}
-        className="flex-1 bg-transparent text-sm outline-none min-w-[120px]"
+        className="flex-1 bg-transparent text-sm outline-none min-w-[80px] py-1"
         style={{ color: "var(--color-text-primary)" }}
       />
     </div>

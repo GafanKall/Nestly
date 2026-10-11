@@ -25,10 +25,10 @@ export function TransactionDetailActions({ id }: { id: string }) {
   };
 
   return (
-    <div className="flex items-center justify-between pt-6 border-t" style={{ borderColor: "var(--color-border)" }}>
+    <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-6 border-t" style={{ borderColor: "var(--color-border)" }}>
       <Link
         href="/finance"
-        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors border hover:bg-accent/5"
+        className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors border hover:bg-accent/5 w-full sm:w-auto"
         style={{
           borderColor: "var(--color-border)",
           color: "var(--color-text-secondary)",
@@ -38,10 +38,10 @@ export function TransactionDetailActions({ id }: { id: string }) {
         Back to Finance
       </Link>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 w-full sm:w-auto">
         <Link
           href={`/finance/${id}/edit`}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors border"
+          className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors border"
           style={{
             borderColor: "var(--color-border)",
             backgroundColor: "var(--color-surface)",
@@ -59,7 +59,7 @@ export function TransactionDetailActions({ id }: { id: string }) {
         >
           <button
             disabled={isPending}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-white disabled:opacity-60"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-white disabled:opacity-60"
             style={{ backgroundColor: "var(--color-expense)" }}
           >
             <Trash2 size={16} />

@@ -146,12 +146,12 @@ export function TaskForm({ initialData }: TaskFormProps) {
         {errors.description && <p className="text-xs" style={{ color: "var(--color-expense)" }}>{errors.description.message}</p>}
       </div>
 
-      <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: "var(--color-border)" }}>
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center gap-3 pt-4 border-t" style={{ borderColor: "var(--color-border)" }}>
         <button
           type="button"
           onClick={() => router.back()}
           disabled={isPending}
-          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-medium transition-colors border sm:border-transparent"
           style={{ color: "var(--color-text-secondary)" }}
         >
           Cancel
@@ -159,7 +159,7 @@ export function TaskForm({ initialData }: TaskFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-60"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-60"
           style={{ backgroundColor: "var(--color-accent)", color: "white" }}
         >
           {isPending ? "Saving..." : isEditing ? "Update Task" : "Save Task"}

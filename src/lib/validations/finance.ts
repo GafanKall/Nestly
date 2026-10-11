@@ -17,10 +17,16 @@ export const transactionSchema = z.object({
     })
     .refine((val) => !isNaN(val) && val > 0, {
       message: "Amount must be a valid number greater than zero.",
+    })
+    .refine((val) => val <= 1_000_000_000_000, {
+      message: "Amount exceeds maximum supported limit (1 trillion Rp).",
     }),
   category: z.enum(categoryValues as [string, ...string[]]),
   description: z.string().max(500, "Description too long.").optional().nullable(),
-  transaction_date: z.string().min(1, "Date is required."),
+  transaction_date: z
+    .string()
+    .min(1, "Date is required.")
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must follow YYYY-MM-DD format."),
 });
 
 export type TransactionInput = z.input<typeof transactionSchema>;

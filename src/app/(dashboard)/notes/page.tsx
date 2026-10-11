@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
-import { FileText, Search } from "lucide-react";
+import { FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { NoteFilters } from "@/components/notes/NoteFilters";
 import type { Note } from "@/types/database";
-import { redirect as nextRedirect } from "next/navigation";
 
 export default async function NotesPage(props: {
   searchParams: Promise<{ q?: string }>;
@@ -45,19 +45,7 @@ export default async function NotesPage(props: {
         action={{ label: "New Note", href: "/notes/new" }}
       />
 
-      <div className="mb-6">
-        <form className="relative max-w-md flex items-center px-3 py-2 rounded-lg border focus-within:ring-2 focus-within:ring-accent transition-all" style={{ backgroundColor: "var(--color-surface)", borderColor: "var(--color-border)" }}>
-          <Search size={16} style={{ color: "var(--color-text-muted)" }} className="min-w-[16px]" />
-          <input
-            type="text"
-            name="q"
-            defaultValue={q}
-            placeholder="Search notes..."
-            className="w-full pl-2 bg-transparent text-sm outline-none"
-            style={{ color: "var(--color-text-primary)" }}
-          />
-        </form>
-      </div>
+      <NoteFilters />
 
       {error ? (
         <p className="text-sm text-expense">Failed to load notes.</p>

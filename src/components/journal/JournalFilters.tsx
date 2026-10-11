@@ -19,7 +19,8 @@ export function JournalFilters() {
     } else {
       params.delete(key);
     }
-    router.push(`${pathname}?${params.toString()}`);
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
   };
 
   return (

@@ -78,7 +78,7 @@ export function ProfileForm({ initialDisplayName, email }: ProfileFormProps) {
         <button
           type="submit"
           disabled={isPending || displayName === initialDisplayName}
-          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-60"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-60 text-center"
           style={{ backgroundColor: "var(--color-accent)", color: "white" }}
         >
           {isPending ? "Saving..." : "Save Changes"}
@@ -90,7 +90,7 @@ export function ProfileForm({ initialDisplayName, email }: ProfileFormProps) {
           type="button"
           onClick={handleSignOut}
           disabled={isPending}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-expense/10"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-expense/10 border border-expense/20 sm:border-transparent"
           style={{ color: "var(--color-expense)" }}
         >
           <LogOut size={16} />

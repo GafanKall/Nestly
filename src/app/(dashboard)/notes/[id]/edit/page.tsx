@@ -19,6 +19,7 @@ export default async function EditNotePage(props: {
     .from("notes")
     .select("*")
     .eq("id", params.id)
+    .eq("user_id", user.id)
     .single();
 
   if (error || !data) notFound();

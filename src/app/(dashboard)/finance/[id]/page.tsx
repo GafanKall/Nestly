@@ -23,6 +23,7 @@ export default async function TransactionDetailPage(props: {
     .from("transactions")
     .select("*")
     .eq("id", params.id)
+    .eq("user_id", user.id)
     .single();
 
   if (error || !data) {

@@ -121,9 +121,9 @@ export function JournalForm({ initialData, initialMood }: JournalFormProps) {
         <textarea
           id="content"
           placeholder="Write down how your day went..."
-          rows={12}
+          rows={8}
           {...register("content")}
-          className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors resize-y"
+          className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors resize-y min-h-[180px]"
           style={{
             borderColor: errors.content ? "var(--color-expense)" : "var(--color-border)",
             backgroundColor: "var(--color-surface)",
@@ -148,12 +148,12 @@ export function JournalForm({ initialData, initialMood }: JournalFormProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: "var(--color-border)" }}>
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center gap-3 pt-4 border-t" style={{ borderColor: "var(--color-border)" }}>
         <button
           type="button"
           onClick={() => router.back()}
           disabled={isPending}
-          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-medium transition-colors border sm:border-transparent"
           style={{ color: "var(--color-text-secondary)" }}
         >
           Cancel
@@ -161,7 +161,7 @@ export function JournalForm({ initialData, initialMood }: JournalFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-60"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-60"
           style={{ backgroundColor: "var(--color-accent)", color: "white" }}
         >
           {isPending ? "Saving..." : isEditing ? "Update Entry" : "Save Entry"}

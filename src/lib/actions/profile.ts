@@ -4,8 +4,12 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 export async function updateProfile(data: { display_name: string }) {
-  if (!data.display_name || data.display_name.trim() === "") {
-    return { error: "Display name cannot be empty." };
+  const trimmed = data.display_name?.trim();
+  if (!trimmed || trimmed.length < 2) {
+    return { error: "Display name must be at least 2 characters." };
+  }
+  if (trimmed.length > 50) {
+    return { error: "Display name must be at most 50 characters." };
   }
 
   const supabase = await createClient();

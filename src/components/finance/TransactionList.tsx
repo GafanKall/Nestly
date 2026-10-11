@@ -41,17 +41,17 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
   return (
     <div className="card space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b" style={{ borderColor: "var(--color-border)" }}>
-        <h3 className="font-semibold text-lg" style={{ color: "var(--color-text-primary)" }}>
+        <h3 className="font-semibold text-base sm:text-lg" style={{ color: "var(--color-text-primary)" }}>
           Recent Transactions
         </h3>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-background border" style={{ borderColor: "var(--color-border)" }}>
+        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-background border self-start sm:self-auto overflow-x-auto max-w-full" style={{ borderColor: "var(--color-border)" }}>
           {(["all", "income", "expense"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setFilterType(t)}
-              className="px-3 py-1 text-xs font-medium rounded-md capitalize transition-all"
+              className="px-3 py-1 text-xs font-medium rounded-md capitalize transition-all whitespace-nowrap"
               style={{
                 backgroundColor: filterType === t ? "var(--color-surface)" : "transparent",
                 color: filterType === t ? "var(--color-text-primary)" : "var(--color-text-secondary)",
@@ -73,7 +73,7 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
             placeholder="Search by category, description, or amount..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border outline-none transition-colors"
+            className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border outline-none transition-colors"
             style={{
               borderColor: "var(--color-border)",
               backgroundColor: "var(--color-surface)",
@@ -86,40 +86,40 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
       {filteredTransactions.length > 0 ? (
         <div className="divide-y" style={{ borderColor: "var(--color-border)" }}>
           {filteredTransactions.map((tx) => (
-            <div key={tx.id} className="py-3 flex items-center justify-between gap-3 group min-w-0">
-              <Link href={`/finance/${tx.id}`} className="flex items-center gap-3 min-w-0 flex-1 hover:opacity-80 transition-opacity">
+            <div key={tx.id} className="py-3 flex items-center justify-between gap-2.5 sm:gap-3 group min-w-0">
+              <Link href={`/finance/${tx.id}`} className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1 hover:opacity-80 transition-opacity">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0"
                   style={{
                     backgroundColor: tx.type === "income" ? "var(--color-income-bg)" : "var(--color-expense-bg)",
                   }}
                 >
                   {tx.type === "income" ? (
-                    <ArrowDown size={18} style={{ color: "var(--color-income)" }} />
+                    <ArrowDown size={16} className="sm:w-[18px] sm:h-[18px]" style={{ color: "var(--color-income)" }} />
                   ) : (
-                    <ArrowUp size={18} style={{ color: "var(--color-expense)" }} />
+                    <ArrowUp size={16} className="sm:w-[18px] sm:h-[18px]" style={{ color: "var(--color-expense)" }} />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium text-sm truncate" style={{ color: "var(--color-text-primary)" }}>
+                  <p className="font-medium text-xs sm:text-sm truncate" style={{ color: "var(--color-text-primary)" }}>
                     {getCategoryLabel(tx.category)}
                   </p>
 
-                  <div className="flex items-center gap-2 text-xs" style={{ color: "var(--color-text-secondary)" }}>
+                  <div className="flex items-center gap-1.5 text-[11px] sm:text-xs" style={{ color: "var(--color-text-secondary)" }}>
                     <span className="shrink-0">{formatDate(tx.transaction_date)}</span>
                     {tx.description && (
                       <>
                         <span>•</span>
-                        <span className="truncate max-w-[120px] sm:max-w-[220px]">{tx.description}</span>
+                        <span className="truncate max-w-[90px] xs:max-w-[130px] sm:max-w-[220px]">{tx.description}</span>
                       </>
                     )}
                   </div>
                 </div>
               </Link>
 
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
                 <p
-                  className="font-semibold text-sm whitespace-nowrap"
+                  className="font-semibold text-xs sm:text-sm whitespace-nowrap"
                   style={{
                     color: tx.type === "income" ? "var(--color-income)" : "var(--color-text-primary)",
                   }}
@@ -127,11 +127,11 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
                   {tx.type === "income" ? "+" : "-"}{formatCurrency(Number(tx.amount))}
                 </p>
                 
-                <div className="flex items-center gap-1 opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-0.5 sm:gap-1 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                   <Link
                     href={`/finance/${tx.id}`}
                     title="View Details"
-                    className="p-1.5 rounded-md hover:bg-accent/10 transition-colors"
+                    className="p-1 sm:p-1.5 rounded-md hover:bg-accent/10 transition-colors"
                     style={{ color: "var(--color-text-muted)" }}
                   >
                     <Eye size={14} />
@@ -139,7 +139,7 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
                   <Link
                     href={`/finance/${tx.id}/edit`}
                     title="Edit Transaction"
-                    className="p-1.5 rounded-md hover:bg-accent/10 transition-colors"
+                    className="p-1 sm:p-1.5 rounded-md hover:bg-accent/10 transition-colors"
                     style={{ color: "var(--color-text-muted)" }}
                   >
                     <Edit2 size={14} />
@@ -151,7 +151,7 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
                   >
                     <button
                       title="Delete Transaction"
-                      className="p-1.5 rounded-md hover:bg-expense/10 transition-colors"
+                      className="p-1 sm:p-1.5 rounded-md hover:bg-expense/10 transition-colors"
                       style={{ color: "var(--color-text-muted)" }}
                     >
                       <Trash2 size={14} />

@@ -1,8 +1,14 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address."),
-  password: z.string().min(1, "Password is required."),
+  email: z
+    .string()
+    .email("Please enter a valid email address.")
+    .max(255, "Email too long."),
+  password: z
+    .string()
+    .min(1, "Password is required.")
+    .max(100, "Password too long."),
 });
 
 export const registerSchema = z
@@ -11,13 +17,17 @@ export const registerSchema = z
       .string()
       .min(2, "Display name must be at least 2 characters.")
       .max(50, "Display name must be at most 50 characters."),
-    email: z.string().email("Please enter a valid email address."),
+    email: z
+      .string()
+      .email("Please enter a valid email address.")
+      .max(255, "Email too long."),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters.")
+      .max(100, "Password must be at most 100 characters.")
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
       .regex(/[0-9]/, "Password must contain at least one number."),
-    confirm_password: z.string(),
+    confirm_password: z.string().max(100),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: "Passwords do not match.",
@@ -25,7 +35,10 @@ export const registerSchema = z
   });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address."),
+  email: z
+    .string()
+    .email("Please enter a valid email address.")
+    .max(255, "Email too long."),
 });
 
 export const resetPasswordSchema = z
@@ -33,9 +46,10 @@ export const resetPasswordSchema = z
     password: z
       .string()
       .min(8, "Password must be at least 8 characters.")
+      .max(100, "Password must be at most 100 characters.")
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
       .regex(/[0-9]/, "Password must contain at least one number."),
-    confirm_password: z.string(),
+    confirm_password: z.string().max(100),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: "Passwords do not match.",

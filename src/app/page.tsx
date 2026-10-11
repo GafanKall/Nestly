@@ -17,7 +17,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--color-background)" }}>
       {/* Nav */}
-      <header className="flex items-center justify-between px-8 py-5">
+      <header className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-5">
         <span className="font-semibold text-lg tracking-tight" style={{ color: "var(--color-text-primary)" }}>
           Nestly
         </span>
@@ -31,10 +31,10 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-24">
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 pb-20 sm:pb-24">
         {/* Badge */}
         <div
-          className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-8"
+          className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-6 sm:mb-8"
           style={{
             backgroundColor: "var(--color-accent-light)",
             color: "var(--color-accent)",
@@ -45,7 +45,7 @@ export default function LandingPage() {
 
         {/* Headline */}
         <h1
-          className="text-4xl sm:text-5xl font-semibold leading-tight max-w-xl mb-5"
+          className="text-3xl sm:text-5xl font-semibold leading-tight max-w-xl mb-4 sm:mb-5"
           style={{ color: "var(--color-text-primary)" }}
         >
           Your personal space for thoughts, notes, money, and everyday life.
@@ -53,7 +53,7 @@ export default function LandingPage() {
 
         {/* Subtext */}
         <p
-          className="text-base max-w-sm mb-10 leading-relaxed"
+          className="text-sm sm:text-base max-w-sm mb-8 sm:mb-10 leading-relaxed"
           style={{ color: "var(--color-text-secondary)" }}
         >
           A private digital companion designed to help you organize your life
@@ -61,11 +61,11 @@ export default function LandingPage() {
         </p>
 
         {/* CTAs */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto max-w-xs sm:max-w-none">
           <Link
             href="/register"
             id="cta-get-started"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all w-full sm:w-auto"
             style={{
               backgroundColor: "var(--color-accent)",
               color: "white",
@@ -77,7 +77,7 @@ export default function LandingPage() {
           <Link
             href="/login"
             id="cta-sign-in"
-            className="inline-flex items-center px-5 py-2.5 rounded-lg text-sm font-medium border transition-all"
+            className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium border transition-all w-full sm:w-auto"
             style={{
               borderColor: "var(--color-border)",
               color: "var(--color-text-secondary)",
@@ -89,7 +89,7 @@ export default function LandingPage() {
         </div>
 
         {/* Feature icons */}
-        <div className="flex items-center gap-8 mt-14">
+        <div className="flex items-center justify-center gap-6 sm:gap-8 mt-10 sm:mt-14">
           {[
             { icon: BookOpenText, label: "Journal" },
             { icon: Wallet, label: "Finance" },

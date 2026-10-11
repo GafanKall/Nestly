@@ -3,10 +3,10 @@ import { PenLine, FileText, Wallet } from "lucide-react";
 
 export function QuickActions() {
   return (
-    <div className="flex flex-wrap gap-3 mb-10">
+    <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3 mb-6 sm:mb-8">
       <Link
         href="/journal/new"
-        className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors hover:bg-accent/5"
+        className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-full border text-xs sm:text-sm font-medium transition-colors hover:bg-accent/5 text-center"
         style={{
           backgroundColor: "var(--color-surface)",
           borderColor: "var(--color-border)",
@@ -14,12 +14,12 @@ export function QuickActions() {
         }}
       >
         <PenLine size={14} style={{ color: "var(--color-text-muted)" }} />
-        + Journal
+        <span>+ Journal</span>
       </Link>
       
       <Link
         href="/notes/new"
-        className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors hover:bg-accent/5"
+        className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-full border text-xs sm:text-sm font-medium transition-colors hover:bg-accent/5 text-center"
         style={{
           backgroundColor: "var(--color-surface)",
           borderColor: "var(--color-border)",
@@ -27,12 +27,12 @@ export function QuickActions() {
         }}
       >
         <FileText size={14} style={{ color: "var(--color-text-muted)" }} />
-        + Note
+        <span>+ Note</span>
       </Link>
       
       <Link
         href="/finance/new"
-        className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors hover:bg-accent/5"
+        className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-full border text-xs sm:text-sm font-medium transition-colors hover:bg-accent/5 text-center"
         style={{
           backgroundColor: "var(--color-surface)",
           borderColor: "var(--color-border)",
@@ -40,7 +40,7 @@ export function QuickActions() {
         }}
       >
         <Wallet size={14} style={{ color: "var(--color-text-muted)" }} />
-        + Expense
+        <span>+ Expense</span>
       </Link>
     </div>
   );
