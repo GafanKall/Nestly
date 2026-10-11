@@ -1,4 +1,4 @@
-# Nestly - Digital Quiet Life Management & Personal Productivity Suite
+# Nestly – Digital Quiet Life Management & Personal Productivity Suite
 
 Nestly is a private, minimalist digital space designed for personal reflection, daily planning, note-taking, and financial tracking. Built with modern web technologies, Nestly provides a clean, calming, and distraction-free user experience to help users organize their life effortlessly.
 
@@ -9,176 +9,207 @@ Nestly is a private, minimalist digital space designed for personal reflection, 
 ### 1. 📊 Interactive Dashboard
 - **Overview Stat Cards**: Instant summary of pending tasks, total balance, note count, and recent journal entries.
 - **Quick Action Links**: Direct access to add new tasks, transactions, or journal entries.
-- **Daily Inspiration**: Curated quote section for daily mindfulness.
-- **Recent Activities & Tasks**: Real-time breakdown of current priorities and recent financial movements.
+- **Daily Mood Picker**: Log your mood directly from the dashboard with visual emoticons.
+- **Recent Activities & Tasks**: Real-time breakdown of today's tasks and recent notes.
 
 ### 2. 💰 Personal Finance Tracker
-- **Indonesian Rupiah (Rp) Native Support**: Auto-formatted currency inputs (e.g., `100.000` or `1.500.000`) with smooth numeric keyboards and clean badges.
+- **Indonesian Rupiah (Rp) Native Support**: Auto-formatted currency inputs (e.g., `100.000` or `1.500.000`).
 - **Income & Expense Categories**: Categorize transactions (Food, Transport, Utilities, Salary, Investment, etc.).
 - **Financial Balance & Breakdown**: Real-time calculation of Total Income, Total Expenses, and Net Balance.
-- **Transaction History**: Filter and manage entries with full edit and delete actions.
+- **Transaction History**: Browse all transactions with full edit and delete support.
 
 ### 3. 🎯 Task Manager
 - **Priority System**: High, Medium, and Low priority badges.
-- **Instant Status Toggle**: Fast one-click task completion.
-- **Due Date Tracking**: Keep track of upcoming deadlines.
-- **Task Filtering & Management**: Organize active vs completed tasks cleanly.
+- **Instant Status Toggle**: One-click task completion.
+- **Due Date Tracking**: Grouped view of Overdue, Today, Upcoming, and No-Date tasks.
+- **Full CRUD**: Create, edit, and delete tasks.
 
 ### 4. 📝 Personal Notes
-- **Tag-based Organization**: Categorize ideas, recipes, project notes, or reminders with custom tags.
-- **Search & Filter**: Quickly search notes by title or tags.
+- **Tag-based Organization**: Categorize ideas and references with custom tags.
+- **Real-time Search**: Search notes by title, content, or tags as you type (URL-driven, consistent with Journal search).
 - **Clean Editor**: Simple and distraction-free writing environment.
 
 ### 5. 📖 Digital Journal & Mood Tracker
-- **Daily Reflection**: Record daily entries with custom dates.
-- **Mood Tracking**: Assign moods to journal entries for emotional self-awareness.
-- **Tags & Search**: Organize memories and search past reflections.
+- **Daily Reflection**: Record entries with custom dates.
+- **Mood Tracking**: Assign moods (great, good, okay, bad, terrible) for emotional self-awareness.
+- **Tags & Real-time Search**: Filter entries by mood or search text instantly without losing input focus.
 
 ### 6. 🔒 Authentication & Account Management
 - **Secure Supabase Auth**: Email & Password registration and login.
-- **Password Reset Flow**: Complete forgot password and `/reset-password` recovery system.
-- **Profile Settings**: Update display name, email, and avatar settings.
+- **Password Reset Flow**: Complete forgot-password and `/reset-password` recovery.
+- **Profile Settings**: Update display name and account preferences.
 
 ---
 
 ## 🛠️ Tech Stack & Architecture
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router, Server Actions, React Server Components)
-- **Styling**: Vanilla CSS Variables Token System + Tailwind CSS
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL Database, Auth, RLS Policies)
-- **Form Handling & Validation**: React Hook Form + Zod validation schemas
-- **Icons & UI Feedback**: Lucide Icons & Sonner toast notifications
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router, Server Actions, React Server Components) |
+| Styling | Vanilla CSS Variables + Tailwind CSS v4 |
+| Database & Auth | Supabase (PostgreSQL, Auth, Row Level Security) |
+| Validation | Zod schemas + React Hook Form |
+| Icons | Lucide React |
+| Notifications | Sonner |
 
 ---
 
-## 🛡️ Security & Performance Highlights
+## 🛡️ Security Highlights
 
-- **Server-Side Ownership Verification**: All Server Actions explicitly enforce `user_id` validation alongside Supabase RLS policies to prevent cross-tenant data access.
-- **Environment Variable Protection**: Strict environment variable validation for Supabase credentials (zero hardcoded secrets).
-- **TypeScript Type Safety**: 100% type-checked codebase using strict schema validation.
+| Area | Status |
+|---|---|
+| Row Level Security (RLS) | ✅ Enabled on all 5 tables. Every policy uses `auth.uid()` to match the owning user. |
+| Server Action auth checks | ✅ Every Server Action calls `supabase.auth.getUser()` and validates `user_id` before any write. |
+| Middleware route guard | ✅ `middleware.ts` redirects unauthenticated users to `/login` for all private routes. |
+| Auth → dashboard redirect | ✅ Already-authenticated users are bounced from `/login`, `/register`, `/forgot-password` to `/dashboard`. |
+| Environment variables | ✅ `.env*` is in `.gitignore`. No secret is hardcoded or exposed to the client bundle. Only `NEXT_PUBLIC_` anon-key (safe by design) reaches the browser. |
+| Input validation | ✅ Zod schemas enforce min/max lengths on all user-supplied fields (title ≤ 200, content ≤ 50 000, amount > 0, tags ≤ 10 × 30 chars, etc.). Database CHECK constraints mirror these limits. |
+| No sensitive logging | ✅ Server Actions and pages never `console.log` passwords, tokens, journal content, or financial data. |
 
 ---
 
-## 🗄️ Supabase Database Setup
+## 🗄️ Database Architecture
 
-To run Nestly, create a Supabase project and execute the following SQL script in your Supabase SQL Editor. This script scaffolds all tables, Row Level Security (RLS) policies, and automatic user profile triggers.
+### Tables & Relationships
+
+```
+auth.users (Supabase managed)
+  │
+  ├── profiles          (1:1)  id → auth.users.id  CASCADE DELETE
+  ├── journals          (1:N)  user_id → auth.users.id  CASCADE DELETE
+  ├── notes             (1:N)  user_id → auth.users.id  CASCADE DELETE
+  ├── transactions      (1:N)  user_id → auth.users.id  CASCADE DELETE
+  └── tasks             (1:N)  user_id → auth.users.id  CASCADE DELETE
+```
+
+### Integrity Checklist
+
+| Item | Implementation |
+|---|---|
+| Every table has a Primary Key | ✅ `profiles.id UUID PK`, all others use `gen_random_uuid()` UUID PK |
+| Foreign keys prevent orphan data | ✅ All tables reference `auth.users(id) ON DELETE CASCADE` |
+| Owner column (`user_id`) present & consistent | ✅ All content tables have `user_id NOT NULL`; `profiles` uses `id` as both PK and FK |
+| DB-level value constraints | ✅ `CHECK` constraints on type enums, amount range, character lengths, mood values, priority, status |
+| CRUD operations verified | ✅ Server Actions implement full Create, Read, Update, Delete for every entity |
+| Delete cascades safely | ✅ `ON DELETE CASCADE` means deleting a user automatically removes all their data; no orphan rows |
+| Migration documented & idempotent | ✅ `supabase/migrations/20260101000000_initial_schema.sql` uses `CREATE IF NOT EXISTS`, `DROP POLICY IF EXISTS` — safe to re-run |
+| Schema source of truth | ✅ `supabase/schema.sql` is the canonical reference kept in version control |
+
+### Performance Indexes
 
 ```sql
--- 1. Profiles Table
-CREATE TABLE profiles (
-  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-  display_name TEXT NOT NULL,
-  avatar_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- 2. Journals Table
-CREATE TABLE journals (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  title TEXT NOT NULL,
-  content TEXT NOT NULL,
-  mood TEXT,
-  tags TEXT[] DEFAULT '{}'::TEXT[],
-  entry_date DATE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- 3. Notes Table
-CREATE TABLE notes (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  title TEXT NOT NULL,
-  content TEXT NOT NULL,
-  tags TEXT[] DEFAULT '{}'::TEXT[],
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- 4. Transactions (Finance) Table
-CREATE TABLE transactions (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('income', 'expense')),
-  amount NUMERIC NOT NULL,
-  category TEXT NOT NULL,
-  description TEXT,
-  transaction_date DATE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- 5. Tasks Table
-CREATE TABLE tasks (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  title TEXT NOT NULL,
-  description TEXT,
-  due_date DATE,
-  priority TEXT NOT NULL CHECK (priority IN ('low', 'medium', 'high')),
-  status TEXT NOT NULL CHECK (status IN ('pending', 'completed')) DEFAULT 'pending',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- ==========================================
--- ROW LEVEL SECURITY (RLS) POLICIES
--- ==========================================
-
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE journals ENABLE ROW LEVEL SECURITY;
-ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
-ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view their own profile." ON profiles FOR SELECT USING (auth.uid() = id);
-CREATE POLICY "Users can update their own profile." ON profiles FOR UPDATE USING (auth.uid() = id);
-
-CREATE POLICY "Users can manage their own journals." ON journals FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users can manage their own notes." ON notes FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users can manage their own transactions." ON transactions FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users can manage their own tasks." ON tasks FOR ALL USING (auth.uid() = user_id);
-
--- ==========================================
--- AUTHENTICATION TRIGGER
--- ==========================================
-
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger AS $$
-BEGIN
-  INSERT INTO public.profiles (id, display_name)
-  VALUES (new.id, split_part(new.email, '@', 1));
-  RETURN new;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+idx_journals_user_date       ON journals(user_id, entry_date DESC)
+idx_notes_user_updated       ON notes(user_id, updated_at DESC)
+idx_transactions_user_date   ON transactions(user_id, transaction_date DESC)
+idx_tasks_user_status_due    ON tasks(user_id, status, due_date)
 ```
 
 ---
 
-## 🚀 Running the Application Locally
+## 🔄 Backup & Recovery Strategy
 
-### 1. Environment Setup
-Create a `.env.local` file in the root directory:
+Nestly is hosted on **Supabase**, which provides multiple built-in backup layers:
+
+### Automatic Backups (Supabase)
+| Plan | Backup Frequency | Retention | Point-in-Time Recovery |
+|---|---|---|---|
+| Free | Daily snapshots | 7 days | ❌ |
+| Pro | Daily snapshots | 7 days | ✅ (WAL-based) |
+| Team/Enterprise | Continuous | 30+ days | ✅ |
+
+### Manual Backup Procedure
+For additional safety, run a manual dump at any time via:
+```bash
+# Using pg_dump (requires your Supabase DB connection string from project Settings > Database)
+pg_dump "postgresql://postgres:[PASSWORD]@[HOST]:5432/postgres" \
+  --schema=public \
+  --no-acl --no-owner \
+  -Fc -f nestly_backup_$(date +%Y%m%d).dump
+```
+
+### Recovery Test Procedure
+1. Create a new Supabase project (staging environment).
+2. Run `supabase/migrations/20260101000000_initial_schema.sql` in the SQL Editor to recreate the schema.
+3. Restore data from the dump: `pg_restore --data-only -d [STAGING_DB_URL] nestly_backup_YYYYMMDD.dump`
+4. Point `.env.local` to the staging project URL and verify all CRUD operations.
+
+### Key Recovery Notes
+- `ON DELETE CASCADE` on all tables means a partial restore (e.g., only `notes` table) is safe and will not create orphan data.
+- Re-running the migration script is idempotent — `IF NOT EXISTS` and `DROP … IF EXISTS` guards prevent errors on existing schemas.
+
+---
+
+## 🚀 Running Locally
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/your-username/nestly.git
+cd nestly
+npm install
+```
+
+### 2. Environment Setup
+Create a `.env.local` file:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-### 2. Install Dependencies
-```bash
-npm install
+### 3. Database Setup
+In your Supabase project's **SQL Editor**, run the migration file:
 ```
+supabase/migrations/20260101000000_initial_schema.sql
+```
+This creates all tables, indexes, RLS policies, and the new-user trigger.
 
-### 3. Start Development Server
+### 4. Start Development Server
 ```bash
 npm run dev
 ```
+Open [http://localhost:3000](http://localhost:3000).
 
-### 4. Open in Browser
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── (auth)/           # Login, register, forgot/reset password
+│   ├── (dashboard)/      # Protected pages: dashboard, journal, notes, finance, tasks, profile
+│   └── auth/callback/    # Supabase OAuth callback route
+├── components/
+│   ├── dashboard/        # Dashboard widgets (greeting, mood, finance summary, etc.)
+│   ├── finance/          # Transaction list, form, detail actions
+│   ├── journal/          # Journal card, form, mood selector, filters
+│   ├── layout/           # Sidebar, mobile header, mobile nav
+│   ├── notes/            # Note card, form, filters
+│   ├── profile/          # Profile form
+│   ├── tasks/            # Task list, form
+│   └── ui/               # Shared primitives (Button, Input, PageHeader, EmptyState, etc.)
+├── lib/
+│   ├── actions/          # Server Actions for all entities
+│   ├── supabase/         # Supabase client (browser + server) and env config
+│   ├── validations/      # Zod schemas
+│   └── utils/            # Format helpers
+├── types/
+│   └── database.ts       # TypeScript types matching DB schema
+├── middleware.ts          # Auth route guard
+supabase/
+├── schema.sql                            # Canonical full schema
+└── migrations/
+    └── 20260101000000_initial_schema.sql # Idempotent migration
+```
+
+---
+
+## 📜 Changelog
+
+| Commit | Description |
+|---|---|
+| `a989e6a` | Mobile responsiveness overhaul, note real-time search, security hardening |
+| `3ca9e96` | Finance optimization, balance overflow fix, transaction detail page |
+| `9172b07` | Custom mood emoticon assets for journal |
+| `3c526fb` | RLS server action enforcement, auto Rupiah format, reset password route |
+| `2631a7d` | Core features complete: auth, journal, notes, tasks, finance |
+| `0b3e563` | Initial commit |
